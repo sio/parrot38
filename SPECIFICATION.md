@@ -35,7 +35,7 @@ the beginning or the end of the post. Separator lines are not required at
 the beginning or at the end of file.
 
 
-# BLOG POST METADATA
+## BLOG POST METADATA
 
 To add metadata to the blog entry include a metadata line anywhere in the
 entry. No default location is assumed.
@@ -57,7 +57,7 @@ Keys and their value meanings/formats are not subject to this specification.
 Keys names and handling their values is delegated to parser implementations.
 
 
-# ESCAPING parrot38 STATEMENTS WITHIN THE BLOG POST
+## ESCAPING parrot38 STATEMENTS WITHIN THE BLOG POST
 
 Post separators and metadata lines are excluded from blog entry during
 rendering. To put a line of the same format in the blog escape first symbol
@@ -66,7 +66,7 @@ parrot38 markup and will be rendered within the blog post without the leading
 backslash.
 
 
-# EXAMPLE
+## EXAMPLE
 
 ```markdown
 ::Date:: 2017-08-07
