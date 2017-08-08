@@ -51,7 +51,7 @@ Metadata line is a single line formatted as follows:
   No spaces or punctuation marks can appear in the area enclosed by double
   colons, or the whole line will not be treated as parrot38 markup.
 - Two colon symbols (::)
-- Value: all text after the colon until the line break.
+- Value: all text after double colon until the line break.
 
 Keys and their value meanings/formats are not subject to this specification.
 Key names and handling their values is delegated to parser implementations.
@@ -61,7 +61,7 @@ Key names and handling their values is delegated to parser implementations.
 
 Post separators and metadata lines are excluded from blog entry during
 rendering. To put a line of the same format in the blog escape first symbol
-with backslash (\\::NotMetadata:: value). Such lines will not be considered
+with backslash `\::NotMetadata:: value`. Such lines will not be considered
 parrot38 markup and will be rendered within the blog post without the leading
 backslash.
 
