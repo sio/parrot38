@@ -3,6 +3,8 @@ Write a blog in plain text with multiple entries per file
 
 This module includes tools for working with parrot38 blog files
 """
+__version__ = "0.0.1"
+__author__ = "Vitaly Potyarkin"
 
 
 import re
