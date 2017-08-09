@@ -21,7 +21,7 @@ There are two important parts of this project:
   converting it to a form readable by popular tools (e.g. Jekyll)
 
 
-## Markup example
+# Markup example
 The following example shows two blog posts written in Markdown and saved
 to the same file using parrot38 markup:
 ```markdown
