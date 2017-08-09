@@ -4,7 +4,7 @@ Most static site generators (e.g. Jekyll) require each blog post to be
 written it a separate text file. This is convenient for machine reading
 but not very comfortable for human readers. Normal user experience with
 web based blogs involves some kind of feed where user scrolls through
-multiple blog entires and reads the ones of interest to him.
+multiple blog entries and reads the ones of interest to him.
 
 parrot38 offers a minimalistic way of writing a blog that is readable in
 plain text form and remains renderable in the markup language used
@@ -54,7 +54,7 @@ Metadata line is a single line formatted as follows:
 - Value: all text after double colon until the line break.
 
 Keys and their value meanings/formats are not subject to this specification.
-Key names and handling their values is delegated to parser implementations.
+Key names and handling of their values is delegated to parser implementations.
 
 
 ## ESCAPING parrot38 STATEMENTS WITHIN THE BLOG POST
@@ -83,5 +83,5 @@ First entry is here - markdown text
 ```
 
 This file will be rendered as two distinct blog posts, with parrot38 markup
-statments stripped. Date and Tags metadata handling depends on the parser
+statements stripped. Date and Tags metadata handling depends on the parser
 implementation.
