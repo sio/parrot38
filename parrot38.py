@@ -200,7 +200,7 @@ class BlogPost(object):
     # meant to be instanciated multiple times when performing typical tasks.
     _re_header = re.compile(r"^\s*\#*\s*(.*?)\s*$")
     _re_not_urlsafe = re.compile(r"[^\w-]+")
-    _re_compress_whitespace = re.compile(r"\s+")
+    _re_whitespace = re.compile(r"\s+")
     _re_nonword = re.compile(r"[^\w\s]")
 
     def __init__(self, body, date, modified=None, tags=None, hidden=None):
@@ -295,7 +295,7 @@ class BlogPost(object):
         For simplicity no format guessing is implemented here, this method
         iterates through supported formats and returns the first match
         """
-        spaces = cls._re_compress_whitespace
+        spaces = cls._re_whitespace
         clean_date = spaces.sub(" ", readable_date).strip()
         for format in cls.DATE_FORMATS:
             try:
