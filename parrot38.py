@@ -146,15 +146,36 @@ def parse(lines, backwards=False, delimiter=DEFAULT_DELIMITER):
             raise ValueError(message) from e
 
 
-def load(filenames):
-    pass
+def load(filenames, *a, **kw):
+    """
+    Generator that reads parrot38 blog posts from multiple plain text files
+
+    Arguments:
+    filenames
+        A path or sequence of paths to files with parrot38 blog entries
+    *a, **kw
+        All extra arguments will be passed to Python built-in open() function
+        for reading these files. Intended use case: specifying text encoding,
+        line break style, etc.
+    """
+    if isinstance(filenames, str): filenames = [filenames]
+    for filename in filenames:
+        lines = read_lines(filename, *a, **kw)
+        for post in parse(lines):
+            yield post
+
+
+def read_lines(filename, *open_args, **open_kwargs):
+    """
+    Generator function that reads a text file line by line.
+    Extra arguments are passed to open() function.
+    """
+    with open(filename, *open_args, **open_kwargs) as file:
+        for line in file:
+            yield line
 
 
 def dump(posts, filename):
-    pass
-
-
-def read_lines(filename):
     pass
 
 
