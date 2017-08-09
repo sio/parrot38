@@ -9,6 +9,7 @@ __author__ = "Vitaly Potyarkin"
 
 import re
 from collections import deque, namedtuple, UserDict
+from datetime import datetime
 from itertools import chain
 
 
@@ -72,10 +73,6 @@ class WriteOnceDict(UserDict):
         """Block deleting items"""
         raise AttributeError("Deleting items from %s is not allowed"
                              % type(self).__name__)
-
-
-class BlogPost(object):
-    pass
 
 
 def parse(lines, backwards=False, delimiter=DEFAULT_DELIMITER):
@@ -160,3 +157,151 @@ def read_lines(filename):
 
 def read_files(directory):
     pass
+
+
+#
+# IMPORTANT
+#
+# Code below makes more assumptions about input than it is required
+# by parrot38 specification.
+#
+# Consider this an example, not a reference.
+#
+
+class BlogPost(object):
+    """
+    Handle a single blog entry with all metadata
+
+    This class imposes extra restrictions on input data in addition to parrot38
+    specification.
+
+    METADATA LINES:
+    date
+        Required. A timestamp in one of supported human readable formats that
+        will be used for sorting posts chronologically.
+    modified
+        Optional. A timestamp showing last modification of blog post. In `stat`
+        terms this could be though of as "mtime", and date as "ctime".
+    tags
+        Optional. Space separated sequence of tags (categories). All non-word
+        characters will be stripped when parsing.
+    hidden
+        Optional. If set, the post will not be rendered or published.
+    """
+    URL_SPACE = "-"  # single char used as word separator in URL
+    DATE_FORMATS = [  # first format is considered default for output
+        "%Y-%m-%d %H:%M",
+        "%Y-%m-%d %H:%M %z",
+        "%Y-%m-%d %H:%M %Z",
+        # TODO: add more formats, review sort order
+        ]
+
+    # Regular expressions are compiled once for class, because BlogPost is
+    # meant to be instanciated multiple times when performing typical tasks.
+    _re_header = re.compile(r"^\s*\#*\s*(.*?)\s*$")
+    _re_not_urlsafe = re.compile(r"[^\w-]+")
+    _re_compress_whitespace = re.compile(r"\s+")
+    _re_nonword = re.compile(r"[^\w\s]")
+
+    def __init__(self, body, date, modified=None, tags=None, hidden=None):
+        """
+        Create new BlogPost instance
+
+        Results of parse() function can be passed as **kwargs
+        """
+        header, text, *__ = body.split("\n", 1) + [""]
+        self._title = self._re_header.sub(r"\1", header)
+        self._body = text.strip()
+        self._ctime = self.parse_date(date)
+        if modified is not None:
+            self._mtime = self.parse_date(modified)
+        else:
+            self._mtime = None
+        if tags is not None:
+            self._tags = self._re_nonword.sub("", tags).split()
+        else:
+            self._tags = []
+        self._hidden = hidden is not None
+
+    @property
+    def title(self):
+        """
+        parrot38 does not require a title to be specifically set, so the first
+        line of post body will be treated as one.
+
+        Markdown heading will be stripped of leading #-characters.
+        """
+        return self._title
+
+    @property
+    def urltitle(self):
+        """Url safe version of self.title"""
+        pattern = self._re_not_urlsafe
+        return pattern.sub(self.URL_SPACE, self.title).strip(self.URL_SPACE)
+
+    @property
+    def body(self):
+        """Post body without first line which is treated as heading"""
+        return self._body
+
+    @property
+    def ctime(self):
+        """Post creation time as datetime object"""
+        return self._ctime
+
+    @property
+    def mtime(self):
+        """Post modification time as datetime object"""
+        if self._mtime:
+            mtime = self._mtime
+        else:
+            mtime = self._ctime
+        return mtime
+
+    @property
+    def created(self):
+        """Post creation time as human readable string"""
+        return self.ctime.strftime(self.DATE_FORMATS[0])
+
+    @property
+    def modified(self):
+        """
+        Post modification time as human readable string
+
+        If post was not modified after creation (self._mtime is None),
+        this property returns empty string
+        """
+        if self._mtime is not None:
+            mod_time = self.mtime.strftime(self.DATE_FORMATS[0])
+        else:
+            mod_time = ""
+        return mod_time
+
+    @property
+    def tags(self):
+        """List of post's tags (categories)"""
+        return self._tags
+
+    @property
+    def hidden(self):
+        """Shows if post is not meant for rendering and/or publishing"""
+        return self._hidden
+
+    @classmethod
+    def parse_date(cls, readable_date):
+        """
+        Create datetime object from human readable date
+
+        For simplicity no format guessing is implemented here, this method
+        iterates through supported formats and returns the first match
+        """
+        spaces = cls._re_compress_whitespace
+        clean_date = spaces.sub(" ", readable_date).strip()
+        for format in cls.DATE_FORMATS:
+            try:
+                date = datetime.strptime(clean_date, format)
+            except ValueError:
+                continue
+            return date
+        else:
+            raise ValueError("date in unknown format: %s" % readable_date)
