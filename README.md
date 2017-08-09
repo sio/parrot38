@@ -21,6 +21,24 @@ There are two important parts of this project:
   converting it to a form readable by popular tools (e.g. Jekyll)
 
 
+## Markup example
+The following example shows two blog posts written in Markdown and saved
+to the same file using parrot38 markup:
+```markdown
+::Date:: 2017-08-07
+::Tags:: test parrot38
+
+# Second blog entry - another markdown heading
+Second entry is here - another markdown text
+
+::::::::::::::::::::::::::::::::::::::
+::Date:: 2017-08-06
+
+# First blog entry - markdown heading
+First entry is here - markdown text
+```
+
+
 # Contributing
 All contributions are welcome!
 Please check [CONTRIBUTING.md](CONTRIBUTING.md) for details
