@@ -161,8 +161,12 @@ def load(filenames, *a, **kw):
     if isinstance(filenames, str): filenames = [filenames]
     for filename in filenames:
         lines = read_lines(filename, *a, **kw)
-        for post in parse(lines):
-            yield post
+        try:
+            for post in parse(lines):
+                yield post
+        except Exception as e:
+            error_msg = "error while parsing file: {}".format(filename)
+            raise ValueError(error_msg) from e
 
 
 def read_lines(filename, *open_args, **open_kwargs):
