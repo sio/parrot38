@@ -305,3 +305,25 @@ class BlogPost(object):
             return date
         else:
             raise ValueError("date in unknown format: %s" % readable_date)
+
+    def to_jekyll(self):
+        """Convert BlogPost to a valid Jekyll post. Returns string"""
+        YAML_FRONT_MATTER = ["---\n", "---\n"]
+        JEKYLL_DATE_FORMAT = "%Y-%m-%d %H:%M %z"
+        EMPHASIS = ["*", "*"]  # used to wrap "Last updated" line
+
+        metadata = dict()
+        metadata["title"] = self.title
+        metadata["date"] = self.ctime.strftime(JEKYLL_DATE_FORMAT)
+        if self.hidden: metadata["published"] = "false"
+        if self.tags: metadata["tags"] = " ".join(self.tags)
+
+        if self.mtime != self.ctime:
+            last_updated = "Last updated on {}".format(
+                                self.mtime.strftime(JEKYLL_DATE_FORMAT)
+                            ).join(EMPHASIS) + "\n\n"
+        else:
+            last_updated = ""
+
+        header = "".join("%s: %s\n" % (k, v) for k, v in metadata.items())
+        return header.join(YAML_FRONT_MATTER) + last_updated + self.body
