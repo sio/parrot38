@@ -179,7 +179,11 @@ def read_lines(filename, *open_args, **open_kwargs):
 
 
 def dump(posts, filename):
-    pass
+    """
+    Dump a sequence of posts (dictionaries like the ones parse() returns)
+    into parrot38-formatted file.
+    """
+    raise NotImplementedError()  # TODO
 
 
 #
