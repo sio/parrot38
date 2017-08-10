@@ -37,8 +37,9 @@ class Delimiter(namedtuple("DelimiterTuple", "char default pattern esc_pattern")
     """
     __slots__ = ()
 
-    def __new__(cls, char=DEFAULT_DELIMITER):
+    def __new__(cls, char=None):
         """Make new Delimiter from char. Override namedtuple constructor"""
+        if char is None: char = DEFAULT_DELIMITER
         if len(char) != 1:
             raise ValueError("delimiter has to be a single character")
         pattern = r"^\%s{7,}$" % char
@@ -75,7 +76,7 @@ class WriteOnceDict(UserDict):
                              % type(self).__name__)
 
 
-def parse(lines, backwards=False, delimiter=DEFAULT_DELIMITER):
+def parse(lines, backwards=False, delim_char=None):
     """
     Parse parrot38 input into a sequence of dictionaries. Each dictionary
     corresponds to a blog post.
@@ -88,13 +89,14 @@ def parse(lines, backwards=False, delimiter=DEFAULT_DELIMITER):
     backwards
         Shows whether lines were read in inverted order,
         bottom to top. Default: False.
-    delimiter
+    delim_char
         Single character used to build parrot38 entry delimiter.
 
     Yields dictionaries where "body" key points to post body, and other keys
     are metadata keys with corresponding values.
     """
-    delim = Delimiter(delimiter)
+    if delim_char is None: delim_char = DEFAULT_DELIMITER
+    delim = Delimiter(delim_char)
     RegexCollection = namedtuple("RegexCollection",
                                  "delim meta esc_delim esc_meta")
     regex = RegexCollection._make(
