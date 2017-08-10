@@ -180,10 +180,6 @@ def dump(posts, filename):
     pass
 
 
-def read_files(directory):
-    pass
-
-
 #
 # IMPORTANT
 #
