@@ -190,9 +190,15 @@ class BlogPost(object):
     """
     URL_SPACE = "-"  # single char used as word separator in URL
     DATE_FORMATS = [  # first format is considered default for output
-        "%Y-%m-%d %H:%M",
         "%Y-%m-%d %H:%M %z",
         "%Y-%m-%d %H:%M %Z",
+        "%Y-%m-%d %H:%M",
+        "%Y-%m-%d %H:%M:%S %z",
+        "%Y-%m-%d %H:%M:%S %Z",
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d %z",
+        "%Y-%m-%d %Z",
+        "%Y-%m-%d",
         # TODO: add more formats, review sort order
         ]
 
